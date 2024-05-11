@@ -1,29 +1,26 @@
-from flask import Flask,render_template
-
-import pymysql
-
-try:
-    db = pymysql.connect(host='localhost', user='root', passwd='666666', port=3306)
-    print('连接成功！')
-except:
-    print('something wrong!')
-
-# 使用 cursor() 方法创建一个游标对象 cursor
-cursor = db.cursor()
-
-# 使用 execute()  方法执行 SQL 查询
-cursor.execute("SELECT VERSION()")
-
-# 使用 fetchone() 方法获取单条数据.
-data = cursor.fetchone()
-
-print("Database version : %s " % data)
-
-# 关闭数据库连接
-db.close()
+# coding: utf-8
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
+# 数据库连接URI
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:123456@localhost:3306/123?charset=utf8'
+# 关闭SQLAlchemy事件追踪，提高性能
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# 直接实例化sqlalchemy对象，传⼊app
+db = SQLAlchemy(app)
+#将Flask实例对象传入Manager
+# manager = Manager(app)
+#定义模型
+class User(db.Model):
+    __tablename__ = 'users'
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
 
-@app.route('/')
-def hello_world():
-    return render_template('/temp/index.html')
+    def __repr__(self):
+        return f'<User {self.username}>'
+
+new_user = User(username='john_doe', email='john.doe@example.com')
+db.session.add(new_user)
+db.session.commit() 
