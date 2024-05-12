@@ -23,6 +23,7 @@ def create_new_database():
     with pymysql.connect(**_MYSQL_CONN_DBAPI) as conn:
         with conn.cursor() as db:
             try:
+                print(mdb.db_database,123)
                 create_sql = f"CREATE DATABASE IF NOT EXISTS `{mdb.db_database}` CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci"
                 db.execute(create_sql)
                 create_new_base_table()
@@ -53,6 +54,7 @@ def main():
     # 检查，如果执行 select 1 失败，说明数据库不存在，然后创建一个新的数据库。
     try:
         create_new_base_table()
+        print(123456)
     except Exception as e:
         logging.error("执行信息：数据库不存在，将创建。")
         # 检查数据库失败，

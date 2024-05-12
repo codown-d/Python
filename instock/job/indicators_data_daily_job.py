@@ -31,6 +31,7 @@ def prepare(date):
             return
 
         table_name = tbs.TABLE_CN_STOCK_INDICATORS['name']
+        print(table_name)
         # 删除老数据。
         if mdb.checkTableIsExist(table_name):
             del_sql = f"DELETE FROM `{table_name}` where `date` = '{date}'"
@@ -38,6 +39,7 @@ def prepare(date):
             cols_type = None
         else:
             cols_type = tbs.get_field_types(tbs.TABLE_CN_STOCK_INDICATORS['columns'])
+            print(cols_type)
 
         dataKey = pd.DataFrame(results.keys())
         _columns = tuple(tbs.TABLE_CN_STOCK_FOREIGN_KEY['columns'])
